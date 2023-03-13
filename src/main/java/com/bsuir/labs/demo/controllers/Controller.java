@@ -1,7 +1,7 @@
 package com.bsuir.labs.demo.controllers;
 
 import com.bsuir.labs.demo.models.Models;
-import com.bsuir.labs.demo.models.Models;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,6 +13,7 @@ import org.json.JSONObject;
 public class Controller {
 
     private static final Logger logger = LogManager.getLogger(Controller.class);
+
     @GetMapping(value = "/get")
     public String maxValue(@RequestParam(name = "A") Float a_value,
                            @RequestParam(name = "B") Float b_value,
@@ -27,6 +28,4 @@ public class Controller {
         response.put("max_value", mod.checkMax());
         return response.toString();
     }
-
-
 }
