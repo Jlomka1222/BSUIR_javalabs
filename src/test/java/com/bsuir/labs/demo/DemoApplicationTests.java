@@ -15,19 +15,12 @@ import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 class DemoApplicationTests {
     @Test
     void check() {
-
         Models eq = new Models(1.0F, 2.2F, 1F);
         Assertions.assertEquals(2.2F, eq.checkMax());
-        eq = new Models(-5F, 2F, 3F);
-        Assertions.assertEquals(3F, eq.checkMax());
-
     }
     @Test
     void check1() {
-
-        Models eq = new Models(1.0F, 2.4F, 1F);
-        Assertions.assertEquals(2.2F, eq.checkMax());
-        eq = new Models(-5F, 2F, 3F);
+        Models eq = new Models(-5F, 2F, 3F);
         Assertions.assertEquals(3F, eq.checkMax());
 
     }

@@ -20,9 +20,6 @@ public class Controller {
                            @RequestParam(name = "C") Float c_value) throws Exception {
         Models mod = new Models(a_value, b_value, c_value);
         logger.info("Validate params");
-        mod.validateParams(a_value);
-        mod.validateParams(b_value);
-        mod.validateParams(c_value);
         JSONObject response = new JSONObject();
         logger.info("founding max value");
         response.put("max_value", mod.checkMax());
