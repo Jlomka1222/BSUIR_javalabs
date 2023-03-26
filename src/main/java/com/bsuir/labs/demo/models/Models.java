@@ -15,11 +15,11 @@ public class Models {
         logger.info("Set parameters");
         try {
             this.a_value = a;
-            validateParams(a_value);
+            //validateParams(a_value);
             this.b_value = b;
-            validateParams(b_value);
+            //validateParams(b_value);
             this.c_value = c;
-            validateParams(c_value);
+            //validateParams(c_value);
 
         } catch (NumberFormatException exp) {
             logger.error("Parsing error");
@@ -39,8 +39,14 @@ public class Models {
         return c_value;
     }
 
+    public String printParams()
+    {
+        String params = "a:" + a_value + " b:" + b_value + " c:" + c_value;
+        return params;
+    }
+
     public float checkMax() {
-        logger.info("Math calculation...");
+        logger.info("finding max value");
         try {
             return Math.max(a_value, Math.max(b_value, c_value));
         } catch (Exception exp) {

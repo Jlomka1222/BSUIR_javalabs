@@ -4,24 +4,23 @@ import com.bsuir.labs.demo.models.Models;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 
 @SpringBootTest
 class DemoApplicationTests {
+    Models eq;
     @Test
-    void check() {
-        Models eq = new Models(1.0F, 2.2F, 1F);
+    void testMax1() {
+        eq = new Models(1.0F, 2.2F, 1F);
         Assertions.assertEquals(2.2F, eq.checkMax());
     }
     @Test
-    void check1() {
-        Models eq = new Models(-5F, 2F, 3F);
-        Assertions.assertEquals(3F, eq.checkMax());
-
+    void testMax2() {
+        Exception exception = assertThrows(ResponseStatusException.class, () -> new Models(-5F, 2F, 3F));
+        Assertions.assertEquals(ResponseStatusException.class, exception.getClass());
     }
 }
