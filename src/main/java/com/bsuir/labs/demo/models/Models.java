@@ -5,21 +5,25 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
+
 public class Models {
-    private float a_value;
-    private float b_value;
-    private float c_value;
+    private final float aValue;
+    private final float bValue;
+    private final float cValue;
     private static final Logger logger = LogManager.getLogger(Models.class);
 
     public Models(Float a, Float b, Float c) {
         logger.info("Set parameters");
         try {
-            this.a_value = a;
-            //validateParams(a_value);
-            this.b_value = b;
-            //validateParams(b_value);
-            this.c_value = c;
-            //validateParams(c_value);
+            this.aValue = a;
+            //validateParams(aValue);
+            this.bValue = b;
+            //validateParams(bValue);
+            this.cValue = c;
+            //validateParams(cValue);
 
         } catch (NumberFormatException exp) {
             logger.error("Parsing error");
@@ -27,41 +31,18 @@ public class Models {
         }
     }
 
+
     public float getA() {
-        return a_value;
+        return aValue;
     }
 
     public float getB() {
-        return b_value;
+        return bValue;
     }
 
     public float getC() {
-        return c_value;
+        return cValue;
     }
 
-    public String printParams()
-    {
-        String params = "a:" + a_value + " b:" + b_value + " c:" + c_value;
-        return params;
-    }
-
-    public float checkMax() {
-        logger.info("finding max value");
-        try {
-            return Math.max(a_value, Math.max(b_value, c_value));
-        } catch (Exception exp) {
-            logger.error("Error");
-            throw new NumberFormatException();
-        }
-    }
-
-    public boolean validateParams(Float paramA) throws NumberFormatException {
-        logger.info("validating param");
-        if (paramA < 0) {
-            logger.error("BAD PARAM");
-            throw new NumberFormatException();
-        }
-        return true;
-    }
 
 }
