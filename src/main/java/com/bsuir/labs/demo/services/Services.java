@@ -5,13 +5,18 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+
 
 public class Services {
+    private static final Logger logger = LogManager.getLogger(Services.class);
     private Models mod;
     private final Float aValue;
-    private Float bValue;
-    private Float cValue;
+    private final Float bValue;
+    private final Float cValue;
+
     public Services(Float a, Float b, Float c) {
         mod = new Models(a, b, c);
         aValue = mod.getA();
@@ -19,12 +24,9 @@ public class Services {
         cValue = mod.getC();
     }
 
-    private static final Logger logger = LogManager.getLogger(Services.class);
-
-
-
 
     public ArrayList<Float> printParams() {
+        logger.info("add parameters to list");
         ArrayList<Float> params = new ArrayList<>();
         params.add(aValue);
         params.add(bValue);
@@ -41,6 +43,14 @@ public class Services {
             logger.error("Error");
             throw new NumberFormatException();
         }
+    }
+
+    public float checkMaxLambda() {
+        logger.info("finding max value");
+        List<Float> floats = Arrays.asList(aValue,bValue,cValue);
+        Float result;
+        return result = floats.stream()
+                .reduce(Float.NEGATIVE_INFINITY, Math::max);
     }
 
     public static boolean validateParams(Float paramA) throws NumberFormatException {

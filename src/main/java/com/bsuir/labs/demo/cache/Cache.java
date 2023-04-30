@@ -5,11 +5,12 @@ import com.bsuir.labs.demo.models.Models;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
+@Component
 public class Cache {
     private static final Logger logger = LogManager.getLogger(Cache.class);
 
