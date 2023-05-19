@@ -3,6 +3,8 @@ package com.bsuir.labs.demo.controllers;
 import com.bsuir.labs.demo.cache.Cache;
 import com.bsuir.labs.demo.counter.Counter;
 
+import com.bsuir.labs.demo.database.FindingMax;
+import com.bsuir.labs.demo.models.Models;
 import com.bsuir.labs.demo.services.Services;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,6 +24,8 @@ import java.util.Objects;
 
 @RestController
 public class Controller {
+    private FindingMax findingMax;
+
     public Cache maxValueCache = new Cache();
     public Counter counter = new Counter();
     private static final Logger logger = LogManager.getLogger(Controller.class);
@@ -29,9 +33,10 @@ public class Controller {
     @GetMapping(value = "/get")
     public String maxValue(@RequestParam(name = "A") Float aValue,
                            @RequestParam(name = "B") Float bValue,
-                           @RequestParam(name = "C") Float cValue) throws Exception {
+                           @RequestParam(name = "C") Float cValue,
+                           @ModelAttribute("models") Models models) throws Exception {
 
-        Services mod = new Services(aValue, bValue, cValue);
+        Services mod = new Services(findingMax, aValue, bValue, cValue);
         logger.info("Validate params");
         Services.validateAllParams(aValue, bValue, cValue);
         JSONObject response = new JSONObject();
@@ -39,12 +44,19 @@ public class Controller {
         response.put("maxValue", mod.checkMaxLambda());
         float maxValue = mod.checkMax();
         maxValueCache.add(mod.printParams(), maxValue);
-        counter.increment();
+        //counter.increment();
+        counter.incrementUnsunc();
+
+        models.setaValue(aValue);
+        models.setbValue(bValue);
+        models.setcValue(cValue);
+
+
         return response.toString();
     }
 
     @GetMapping(value = "/count")
-    public Integer count() {
+    public ResponseEntity<?> count() throws JSONException {
         return counter.getCount();
     }
 
@@ -53,24 +65,40 @@ public class Controller {
             method = RequestMethod.POST,
             produces = "application/json")
     public ResponseEntity<?> bulkEndpoint(
-            @RequestBody Map<String, Object> request) throws JSONException {
-        Integer aValue = (Integer) request.get("A");
-        Integer bValue = (Integer) request.get("B");
-        Integer cValue = (Integer) request.get("C");
+            @RequestBody List<Map<String, Integer>> request) throws JSONException {
         logger.info("POST");
-        List<Integer> params = new ArrayList<>();
-        params.add(aValue);
-        params.add(bValue);
-        params.add(cValue);
         JSONObject response = new JSONObject();
-        response.put("argsProvided", (long) params.size());
-        response.put("min", params.stream().min(Integer::compare).orElse(null));
-        response.put("max", params.stream().max(Integer::compare).orElse(null));
-        Map<Integer, Long> frequency = new HashMap<>();
-        params.forEach(element -> frequency.put(element, params.stream()
-                .filter(el -> Objects.equals(el, element))
-                .count()));
-        response.put("argsFrequency", frequency);
+        List<Map<String, Float>> answers = new ArrayList<>();
+        for(int i = 0; i < request.size(); i++) {
+            answers.add(new HashMap<>());
+            answers.get(i).put("A", Float.valueOf(request.get(i).get("A")));
+            answers.get(i).put("B", Float.valueOf(request.get(i).get("B")));
+            answers.get(i).put("C", Float.valueOf(request.get(i).get("C")));
+        }
+        List<Float> params = new ArrayList<>();
+        List<Float> ansBulk = new ArrayList<>();
+        for (Map<String, Float> answer : answers) {
+            Float aValue = answer.get("A");
+            Float bValue = answer.get("B");
+            Float cValue = answer.get("C");
+            Services checkObj = new Services(findingMax, aValue,bValue,cValue);
+            Float resultValue = checkObj.checkMaxLambda(aValue,bValue,cValue);
+            ansBulk.add(resultValue);
+            params.add(aValue);
+            params.add(bValue);
+            params.add(cValue);
+            response.put("bulkResult", ansBulk);
+            response.put("argsProvided", (long) params.size());
+            response.put("min", params.stream().min(Float::compare).orElse(null));
+            response.put("max", params.stream().max(Float::compare).orElse(null));
+            Map<Float, Long> frequency = new HashMap<>();
+            params.forEach(element -> frequency.put(element, params.stream()
+                    .filter(el -> Objects.equals(el, element))
+                    .count()));
+            response.put("argsFrequency", frequency);
+        }
         return new ResponseEntity<>(response.toString(), HttpStatus.OK);
     }
+
+
 }

@@ -1,6 +1,7 @@
 package com.bsuir.labs.demo;
 
 
+import com.bsuir.labs.demo.database.FindingMax;
 import com.bsuir.labs.demo.models.Models;
 import com.bsuir.labs.demo.services.Services;
 import org.junit.jupiter.api.Assertions;
@@ -15,10 +16,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest
 class DemoApplicationTests {
     Services eq;
+    FindingMax findingMax;
 
     @Test
     void testMaxCorrect() {
-        eq = new Services(1.0F, 2.2F, 1F);
+        eq = new Services(findingMax, 1.0F, 2.2F, 1F);
         assertEquals(2.2F, eq.checkMax());
     }
 

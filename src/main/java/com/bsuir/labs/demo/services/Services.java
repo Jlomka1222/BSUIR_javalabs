@@ -1,27 +1,32 @@
 package com.bsuir.labs.demo.services;
 
+import com.bsuir.labs.demo.database.FindingMax;
 import com.bsuir.labs.demo.models.Models;
+import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-
+@Service
 public class Services {
+
+    private final FindingMax findingMax;
     private static final Logger logger = LogManager.getLogger(Services.class);
     private Models mod;
-    private final Float aValue;
-    private final Float bValue;
-    private final Float cValue;
+    private final float aValue;
+    private final float bValue;
+    private final float cValue;
 
-    public Services(Float a, Float b, Float c) {
-        mod = new Models(a, b, c);
-        aValue = mod.getA();
-        bValue = mod.getB();
-        cValue = mod.getC();
+
+
+    public Services(FindingMax findingMax, float a,float b, float c) {
+        this.findingMax = findingMax;
+        //mod = new Models(a, b, c);
+        aValue = mod.getaValue();
+        bValue = mod.getbValue();
+        cValue = mod.getcValue();
     }
 
 
@@ -38,7 +43,7 @@ public class Services {
     public float checkMax() {
         logger.info("finding max value");
         try {
-            return Math.max(mod.getA(), Math.max(mod.getB(), mod.getC()));
+            return Math.max(mod.getaValue(), Math.max(mod.getbValue(), mod.getcValue()));
         } catch (Exception exp) {
             logger.error("Error");
             throw new NumberFormatException();
@@ -48,6 +53,13 @@ public class Services {
     public float checkMaxLambda() {
         logger.info("finding max value");
         List<Float> floats = Arrays.asList(aValue,bValue,cValue);
+        Float result;
+        return result = floats.stream()
+                .reduce(Float.NEGATIVE_INFINITY, Math::max);
+    }
+    public float checkMaxLambda(float fValue,float sValue,float tValue) {
+        logger.info("finding max value");
+        List<Float> floats = Arrays.asList(fValue,sValue,tValue);
         Float result;
         return result = floats.stream()
                 .reduce(Float.NEGATIVE_INFINITY, Math::max);
@@ -78,4 +90,16 @@ public class Services {
         }
         return true;
     }
+
+    @Transactional
+    public void save(Models models){
+        findingMax.save(models);
+    }
+
+    @Transactional
+    public Models findOne(int id){
+        Optional<Models> foundModels = findingMax.findById(id);
+        return foundModels.orElse(null);
+    }
+
 }

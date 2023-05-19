@@ -1,15 +1,26 @@
 package com.bsuir.labs.demo.models;
 
+import jakarta.persistence.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-
+@Entity
+@Table(name = "max_value")
 public class Models {
-    private final float aValue;
-    private final float bValue;
-    private final float cValue;
+
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    @Column(name = "a_value")
+    private float aValue;
+    @Column(name = "b_value")
+    private float bValue;
+    @Column(name = "c_value")
+    private float cValue;
+
     private static final Logger logger = LogManager.getLogger(Models.class);
 
     public Models(Float a, Float b, Float c) {
@@ -28,18 +39,38 @@ public class Models {
         }
     }
 
+    public Models(){}
 
-    public float getA() {
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public float getaValue() {
         return aValue;
     }
 
-    public float getB() {
+    public void setaValue(float aValue) {
+        this.aValue = aValue;
+    }
+
+    public float getbValue() {
         return bValue;
     }
 
-    public float getC() {
+    public void setbValue(float bValue) {
+        this.bValue = bValue;
+    }
+
+    public float getcValue() {
         return cValue;
     }
 
-
+    public void setcValue(float cValue) {
+        this.cValue = cValue;
+    }
 }
